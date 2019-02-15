@@ -1,0 +1,15 @@
+.polls {
+  width: 100%;
+  padding: 20px;
+}
+
+.polls__item {
+  width: auto;
+  margin: 5px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.polls__item-title {
+  text-align: center;
+  color: #555555;
+}
