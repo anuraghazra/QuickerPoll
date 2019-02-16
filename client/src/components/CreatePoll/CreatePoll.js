@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
+import io from 'socket.io-client';
 
 import styled from 'styled-components';
 import { Button, Row, Col } from 'antd';
@@ -11,6 +12,7 @@ import AddVote from './AddVote';
 import VoteGroup from './VoteGroup';
 
 import '../../styles/CreatePoll.css';
+import Context from '../Context';
 
 
 const CreatePollWrapper = styled.div`
@@ -36,7 +38,7 @@ class CreatePoll extends Component {
     }
   }
 
-  submitPoll = () => {
+  submitPoll = (context) => {
     this.setState({ isLoading: true });
     let data = {
       name: this.state.name,
@@ -44,9 +46,13 @@ class CreatePoll extends Component {
     }
     axios.post('/api/polls', data)
       .then((res) => {
-        this.setState({
-          willRedirect: true
-        })
+        context.getPolls(() => {
+          this.setState({
+            willRedirect: true
+          })
+          let socket = io();
+          socket.emit('update:client', true);
+        });
       })
       .catch((error) => {
         console.log(error)
@@ -133,27 +139,37 @@ class CreatePoll extends Component {
     }
 
     return (
-      <CreatePollWrapper>
-        <PollTitle
-          name={this.state.name}
-          changeTitle={this.changeTitle}
-        />
-        <Row align="middle" justify="center" type="flex" >
-          <Col md={24} lg={12}>
-            <AddVote addPollOption={this.addPollOption} />
-            <VoteGroup
-              deletable={true}
-              handleDelete={this.handleDelete}
-              updateValue={this.updateVoteGroupValue}
-              updateColor={this.updateVoteGroupColor}
-              polls={this.state.votes} />
-          </Col>
-          <Col md={24} lg={12}>
-            <Chart name={this.state.name} votes={this.state.votes} />
-          </Col>
-        </Row>
-        <Button loading={this.state.isLoading} onClick={this.submitPoll}>Create Poll</Button>
-      </CreatePollWrapper>
+      <Context.Consumer>
+        {(context) => {
+          return (
+            <CreatePollWrapper>
+              <PollTitle
+                name={this.state.name}
+                changeTitle={this.changeTitle}
+              />
+
+              <Row align="middle" justify="center" type="flex" >
+                <Col md={24} lg={12}>
+
+                  <AddVote addPollOption={this.addPollOption} />
+                  <VoteGroup
+                    deletable={true}
+                    handleDelete={this.handleDelete}
+                    updateValue={this.updateVoteGroupValue}
+                    updateColor={this.updateVoteGroupColor}
+                    votes={this.state.votes} />
+
+                </Col>
+                <Col md={24} lg={12}>
+                  <Chart name={this.state.name} votes={this.state.votes} />
+                </Col>
+              </Row>
+
+              <Button loading={this.state.isLoading} onClick={() => this.submitPoll(context)}>Create Poll</Button>
+            </CreatePollWrapper>
+          )
+        }}
+      </Context.Consumer>
     )
   }
 }

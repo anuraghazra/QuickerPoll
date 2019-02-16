@@ -14,7 +14,8 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.10",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "concurrently": "^4.1.0"

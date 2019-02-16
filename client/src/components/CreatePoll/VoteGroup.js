@@ -1,12 +1,19 @@
-import React from 'react'
-import { List, Button, InputNumber, Input } from 'antd'
+import React from 'react';
+import { List, Button, InputNumber, Input } from 'antd';
 
-const VoteGroup = ({ polls, handleDelete, updateValue, updateColor, deletable, isUpdating }) => {
-  isUpdating && polls.map(e => (e.__id = e._id))
+const VoteGroup = ({
+  votes,
+  handleDelete,
+  updateValue,
+  updateColor,
+  deletable,
+  isUpdating
+}) => {
+  isUpdating && votes.map(e => (e.__id = e._id));
   return (
     <List
       itemLayout="horizontal"
-      dataSource={polls}
+      dataSource={votes}
       renderItem={item => (
         <List.Item
           actions={[
