@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useContext } from 'react';
 
 import {
   Card,
@@ -12,69 +12,63 @@ import EditPoll from '../EditPoll';
 import CastVote from '../CastVote';
 import Context from '../Context';
 
-class SinglePoll extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDeleting: false,
-      isEditing: false,
-      isUpdated: false,
-      isLoading: true
-    }
+
+/**
+ * @class EditPoll
+ * @usedIn {Poll}
+ */
+function SinglePoll(props) {
+  const [isDeleting, setDeleting] = useState(false);
+  const context = useContext(Context);
+  const { poll } = props;
+
+  const deletePoll = (context) => {
+    setDeleting(true);
+    context.state.handleDeletePoll(poll._id);
   }
+  
 
-  deletePoll = (context) => {
-    this.setState({
-      isDeleting: true
-    });
-    context.handleDeletePoll(this.props.poll._id);
-  }
+  // Poll Actions (vote/edit/delete)
+  const ActionVote = (
+    <Tooltip placement="left" title="vote">
+      <CastVote icon="pie-chart" poll={poll} />
+    </Tooltip>
+  )
+  const ActionEdit = (
+    <Tooltip placement="left" title="edit">
+      <EditPoll poll={poll} />
+    </Tooltip>
+  )
+  const ActionPop = (
+    <Popconfirm
+      placement="top"
+      title={'delete this poll?'}
+      onConfirm={() => deletePoll(context)}
+      okText="Yes"
+      cancelText="No"
+    >
+      <Tooltip placement="left" title="delete">
+        <Button icon={isDeleting ? 'loading' : 'delete'} />
+      </Tooltip>
+    </Popconfirm>
+  );
 
-  render() {
-    return (
-      <Context.Consumer>
-        {(context) => {
-          let poll_array = context.state.polls.polls;
-          let poll = poll_array.find(e => e._id === this.props.pollid);
-          console.log(poll)
-          const Actions = [
-            <Tooltip placement="left" title="vote">
-              <CastVote
-                icon="pie-chart"
-                poll={poll}
-              />
-            </Tooltip>,
+  const Actions = [
+    ActionVote,
+    ActionEdit,
+    ActionPop
+  ];
 
-            <Tooltip placement="left" title="edit">
-              <EditPoll poll={poll} />
-            </Tooltip>,
-
-            <Popconfirm
-              placement="top"
-              title={'delete this poll?'}
-              onConfirm={() => this.deletePoll(context)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Tooltip placement="left" title="delete">
-                <Button icon={this.state.isDeleting ? 'loading' : 'delete'} />
-              </Tooltip>
-            </Popconfirm>
-          ];
-          return (
-            <div>
-              <Card
-                className="polls__item"
-                actions={Actions}>
-                <h2 className="polls__item-title">{poll.name}</h2>
-                <Chart name={poll.name} votes={poll.votes} />
-              </Card>
-            </div>
-          )
-        }}
-      </Context.Consumer>
-    )
-  }
+  return (
+    <section>
+      <div>
+        <Card className="polls__item" actions={Actions}>
+          <h2 className="polls__item-title">{poll.name}</h2>
+          <Chart name={poll.name} votes={poll.votes} />
+        </Card>
+      </div>
+    </section>
+  )
 }
 
 // SinglePoll.propTypes = {

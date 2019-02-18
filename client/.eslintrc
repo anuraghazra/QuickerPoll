@@ -1,0 +1,16 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "prefer-const": "warn",
+    "prefer-destructuring": "warn",
+    "no-empty-function": "warn",
+    "constructor-super": "warn",
+    "no-multiple-empty-lines": "warn",
+    "camelcase": "warn",
+    "no-dupe-args": "warn",
+    "max-lines": ["warn", 150],
+    "no-multi-spaces": "warn",
+    "no-param-reassign": "warn",
+    "prefer-arrow-callback": "warn"
+  }
+}

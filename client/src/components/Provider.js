@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Context from './Context';
 import axios from 'axios';
 import io from 'socket.io-client';
-let socket = io();
 
 class Provider extends Component {
   constructor(props) {
@@ -10,34 +9,40 @@ class Provider extends Component {
 
     this.state = {
       isLoading: true,
-      polls: []
+      polls: [],
+      getPolls: this.getPolls,
+      handleDeletePoll: this.handleDeletePoll,
+      addVote: this.addVote
     }
   }
 
   componentDidMount() {
-    this.getPolls();
-    socket.on("update:server", data => {
-      this.getPolls();
+    this.state.getPolls();
+    const socket = io();
+    socket.on("update:server", () => {
+      this.state.getPolls();
     });
   }
 
   getPolls = (callback) => {
     axios.get('/api/polls')
       .then(res => {
-        callback && callback();
         this.setState({
           polls: res.data,
           isLoading: false
+        }, () => {
+          callback && callback();
         });
       })
       .catch(err => console.log(err));
   }
 
   addVote = (id, value, callback) => {
+    // eslint-disable-next-line 
     axios.patch(`/api/polls/cast/${id}`, { vote_id: value })
       .then(res => {
         callback();
-        this.getPolls();
+        this.state.getPolls();
         console.log('Updated Votes', res.data);
       })
       .catch(err => {
@@ -46,9 +51,10 @@ class Provider extends Component {
   }
 
   handleDeletePoll = (_id) => {
+    // eslint-disable-next-line 
     axios.delete(`/api/polls/${_id}`, { data: { poll_id: _id } })
       .then(() => {
-        this.getPolls();
+        this.state.getPolls();
         const socket = io();
         socket.emit('update:client', true);
       })
@@ -57,16 +63,11 @@ class Provider extends Component {
       });
   }
 
-
-
   render() {
     return (
       <Context.Provider
         value={{
-          state: this.state,
-          getPolls: this.getPolls,
-          handleDeletePoll: this.handleDeletePoll,
-          addVote: this.addVote
+          state: this.state
         }}>
         {this.props.children}
       </Context.Provider>

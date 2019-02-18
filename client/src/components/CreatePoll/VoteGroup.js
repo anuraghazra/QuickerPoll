@@ -1,41 +1,66 @@
-import React from 'react';
-import { List, Button, InputNumber, Input } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { List, Button, Input } from 'antd';
 
-const VoteGroup = ({
-  votes,
-  handleDelete,
-  updateValue,
-  updateColor,
-  deletable,
-  isUpdating
-}) => {
+
+/**
+ * @class VoteGroup
+ * @usedIn {EditPoll, CreatePoll}
+ */
+
+function VoteGroup(props) {
+  const [votes, setVotes] = useState(props.votes);
+
+  useEffect(() => {
+    setVotes(props.votes)
+  });
+
+  const update = (id, value, type) => {
+    const voteCopy = [...votes]
+    votes.find(a => {
+      if (a.__id === id) {
+        a[type] = value
+        return true
+      }
+      return false
+    })
+    setVotes(voteCopy);
+    props.rerender && props.rerender();
+  }
+
+  const { handleDelete, deletable, isUpdating } = props;
   isUpdating && votes.map(e => (e.__id = e._id));
+
   return (
     <List
       itemLayout="horizontal"
       dataSource={votes}
-      renderItem={item => (
-        <List.Item
-          actions={[
-            <Input
-              type="color"
-              defaultValue={item.color}
-              value={item.color}
-              onChange={e => updateColor(item.__id, e.target.value)}
-              style={{ width: '80px' }}
-            />,
-            <InputNumber
-              defaultValue={item.value}
-              onChange={value => updateValue(item.__id, value)}
-              placeholder="vote value"
-            />,
-            deletable && (
-              <Button icon="delete" shape="circle" onClick={() => handleDelete(item.__id)} />
-            )
-          ]}>
-          <List.Item.Meta title={<p>{item.name}</p>} />
-        </List.Item>
-      )}
+      renderItem={item => {
+        const actions = [
+          <Input
+            type="color"
+            defaultValue={item.color}
+            value={item.color}
+            onChange={e => update(item.__id, e.target.value, 'color')}
+            style={{ width: '80px' }}
+          />,
+          <Input
+            type="number"
+            defaultValue={item.value}
+            value={item.value}
+            onChange={e => update(item.__id, e.target.value, 'value')}
+            placeholder="vote value"
+          />,
+          deletable && (
+            <Button icon="delete" shape="circle" onClick={() => handleDelete(item.__id)} />
+          )
+        ];
+        return (
+          <List.Item
+            actions={actions}>
+            <List.Item.Meta title={<p>{item.name}</p>} />
+          </List.Item>
+        )
+      }}
     />
   )
 }

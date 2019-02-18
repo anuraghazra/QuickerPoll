@@ -3,10 +3,14 @@ import { Modal, Button } from 'antd'
 import axios from 'axios'
 import io from 'socket.io-client';
 
-import PollTitle from './CreatePoll/PollTitle'
+import PollTitle from './PollTitle'
 import VoteGroup from './CreatePoll/VoteGroup'
 import Context from './Context';
 
+/**
+ * @class EditPoll
+ * @usedIn {SinglePoll} 
+ */
 class EditPoll extends Component {
   constructor(props) {
     super(props)
@@ -14,17 +18,14 @@ class EditPoll extends Component {
     this.state = {
       visible: false,
       willRename: false,
-      _mongo_id: this.props.poll._id,
+      _mongo_id: this.props.poll._id, // eslint-disable-line
       poll: this.props.poll
     }
   }
 
-  // componentWillReceiveProps(newProps) {
-  //   this.setState({ poll: newProps.poll });
-  // }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.poll !== prevState.poll) {
-      return ({ poll: nextProps.poll }) // <- this is setState equivalent
+  componentDidUpdate(prevprops, prevState) {
+    if (prevprops.poll !== this.props.poll) {
+      this.setState({ poll: this.props.poll })
     }
   }
   showModal = () => {
@@ -42,7 +43,7 @@ class EditPoll extends Component {
     this.setState({
       visible: false
     })
-    let updatedValues = [
+    const updatedValues = [
       { propName: 'name', value: this.state.poll.name },
       { propName: 'votes', value: this.state.poll.votes }
     ]
@@ -50,16 +51,20 @@ class EditPoll extends Component {
     axios.patch(`/api/polls/${this.state._mongo_id}`, updatedValues)
       .then(res => {
         console.log(res.data, 'Updated');
-        context.getPolls();
-        this.setState({
-          poll: this.props.poll
-        })
+        context.state.getPolls(() => {
+          const pollArray = this.context.state.polls.polls;
+          const poll = pollArray.find(e => e._id === this.state.poll._id);
+          this.setState(() => {
+            return { poll: poll }
+          }, () => {
+            const socket = io();
+            socket.emit('update:client', true);
+          })
+        });
       })
       .catch(err => {
         console.log('ERROR Updating Poll', err)
       })
-    const socket = io();
-    socket.emit('update:client', true);
   }
 
   handleTitleRename = () => {
@@ -69,36 +74,11 @@ class EditPoll extends Component {
   }
 
   changeTitle = value => {
-    this.setState({ name: value })
-  }
-
-  // Updates the input value of VoteGroup
-  updateVoteGroupValue = (id, value) => {
-    let vote_copy = [...this.state.poll.votes]
-    this.state.poll.votes.find(a => {
-      if (a.__id === id) {
-        a.value = value
-        return true
-      }
-      return false
-    })
     this.setState({
-      poll: { ...this.state.poll, votes: vote_copy }
-    })
-  }
-
-  // Updates the color value of VoteGroup
-  updateVoteGroupColor = (id, value) => {
-    let vote_copy = [...this.state.poll.votes]
-    this.state.poll.votes.find(a => {
-      if (a.__id === id) {
-        a.color = value
-        return true;
+      poll: {
+        ...this.state.poll,
+        name: value
       }
-      return false;
-    })
-    this.setState({
-      poll: { ...this.state.poll, votes: vote_copy }
     })
   }
 
@@ -119,8 +99,6 @@ class EditPoll extends Component {
                 <VoteGroup
                   isUpdating={true}
                   deletable={false}
-                  updateValue={this.updateVoteGroupValue}
-                  updateColor={this.updateVoteGroupColor}
                   votes={this.state.poll.votes}
                 />
               </Modal>
@@ -131,5 +109,7 @@ class EditPoll extends Component {
     )
   }
 }
+
+EditPoll.contextType = Context;
 
 export default EditPoll;

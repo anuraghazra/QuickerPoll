@@ -3,18 +3,17 @@ import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import io from 'socket.io-client';
 
-import styled from 'styled-components';
 import { Button, Row, Col } from 'antd';
 
 import Chart from '../Chart';
-import PollTitle from './PollTitle';
+import PollTitle from '../PollTitle';
 import AddVote from './AddVote';
 import VoteGroup from './VoteGroup';
 
-import '../../styles/CreatePoll.css';
 import Context from '../Context';
 
 
+import styled from 'styled-components';
 const CreatePollWrapper = styled.div`
   max-width: 980px;
   margin: auto;
@@ -40,17 +39,17 @@ class CreatePoll extends Component {
 
   submitPoll = (context) => {
     this.setState({ isLoading: true });
-    let data = {
+    const data = {
       name: this.state.name,
       votes: this.state.votes,
     }
     axios.post('/api/polls', data)
       .then((res) => {
-        context.getPolls(() => {
+        context.state.getPolls(() => {
           this.setState({
             willRedirect: true
           })
-          let socket = io();
+          const socket = io();
           socket.emit('update:client', true);
         });
       })
@@ -63,36 +62,10 @@ class CreatePoll extends Component {
 
   addPollOption = (addedPoll) => {
     addedPoll.__id = Math.random() * 1000;
-    let newvotes = [...this.state.votes, addedPoll];
+    const newvotes = [...this.state.votes, addedPoll];
     this.setState({
       votes: newvotes
     })
-  }
-
-  // Updates the input value of PollVote
-  updateVoteGroupValue = (id, value) => {
-    let vote_copy = [...this.state.votes];
-    this.state.votes.find((a, b) => {
-      if (a.__id === id) {
-        a.value = value;
-        return true;
-      };
-      return false;
-    });
-    this.setState({ votes: vote_copy });
-  }
-
-  // Updates the color value of PollVote
-  updateVoteGroupColor = (id, value) => {
-    let vote_copy = [...this.state.votes];
-    this.state.votes.find(a => {
-      if (a.__id === id) {
-        a.color = value;
-        return true;
-      };
-      return false;
-    });
-    this.setState({ votes: vote_copy });
   }
 
   handleDelete = (id) => {
@@ -105,34 +78,14 @@ class CreatePoll extends Component {
     this.setState({ name: value })
   }
 
-  parseChartdata = () => {
-    let labels = [];
-    let data = [];
-    let colors = [];
-    for (let i = 0; i < this.state.votes.length; i++) {
-      labels.push(this.state.votes[i].name);
-      data.push(this.state.votes[i].value);
-      colors.push(this.state.votes[i].color);
-    }
-    const chartData = {
-      labels: labels,
-      datasets: [
-        {
-          label: this.state.name,
-          backgroundColor: colors,
-          hoverBackgroundColor: colors,
-          data: data
-        }
-      ]
-    }
-    return chartData;
+  handleRerender = () => {
+    this.forceUpdate();
   }
 
   render() {
     if (this.state.willRedirect) {
       return <Redirect to="/" />
     }
-    const chartData = this.parseChartdata();
 
     if (this.state.isError) {
       return <Button loading warning>Hmmmm.. Something Went Wrong</Button>
@@ -154,10 +107,10 @@ class CreatePoll extends Component {
                   <AddVote addPollOption={this.addPollOption} />
                   <VoteGroup
                     deletable={true}
+                    rerender={this.handleRerender}
                     handleDelete={this.handleDelete}
-                    updateValue={this.updateVoteGroupValue}
-                    updateColor={this.updateVoteGroupColor}
-                    votes={this.state.votes} />
+                    votes={this.state.votes}
+                  />
 
                 </Col>
                 <Col md={24} lg={12}>

@@ -3,9 +3,9 @@ import { Pie } from 'react-chartjs-2';
 
 const Chart = ({ votes, name }) => {
   const parseChartdata = () => {
-    let labels = [];
-    let data = [];
-    let colors = [];
+    const labels = [];
+    const data = [];
+    const colors = [];
     for (let i = 0; i < votes.length; i++) {
       labels.push(votes[i].name);
       data.push(votes[i].value);
@@ -24,9 +24,11 @@ const Chart = ({ votes, name }) => {
     }
     return chartData;
   }
+
+  const chartdata = parseChartdata();
   return (
     <Pie
-      data={parseChartdata()}
+      data={chartdata}
       options={{ maintainAspectRatio: true }}
     />
   )

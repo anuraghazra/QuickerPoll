@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
+import { Input, Button, InputNumber } from 'antd';
 import styled from 'styled-components';
 
-import { Input, Button, InputNumber } from 'antd';
 
-
-function randomHex(e) {
-  return '#' + Math.floor(Math.random() * 16777215).toString(16)
-}
 const AddPollWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 50px;
-
+  
   .ui__add {
     display: flex;
     > * {
@@ -19,7 +15,11 @@ const AddPollWrapper = styled.div`
       flex: 1;
     }
   }
-`
+  `;
+
+function randomHex(e) {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16)
+}
 
 class AddVote extends Component {
   state = {

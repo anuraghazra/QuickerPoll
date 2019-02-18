@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Modal, Button, Radio } from 'antd'
+import React, { useState, useContext } from 'react';
+import { Modal, Button, Radio } from 'antd';
+import PropTypes from 'prop-types';
 import Context from './Context';
 import io from 'socket.io-client';
 
@@ -12,35 +12,26 @@ const radioStyle = {
   lineHeight: '30px'
 }
 
-class CastVote extends Component {
-  constructor(props) {
-    super(props)
+function CastVote(props) {
+  const context = useContext(Context);
+  const [visible, setVisible] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [value, setValue] = useState(null);
 
-    this.state = {
-      visible: false,
-      isLoading: false,
-      value: null
-    }
+  const showModal = () => {
+    setVisible(true);
   }
 
-  showModal = () => {
-    this.setState({
-      visible: true
-    })
+  const reset = () => {
+    setLoading(false);
+    setValue(null);
   }
 
-  reset = () => {
-    this.setState({
-      isLoading: false,
-      value: null
-    })
-  }
-
-  handleOk = (context) => {
-    this.setState({ isLoading: true })
-    context.addVote(this.props.poll._id, this.state.value, () => {
-      this.setState({ visible: false });
-      this.reset();
+  const handleOk = () => {
+    setLoading(true);
+    context.state.addVote(props.poll._id, value, () => {
+      setVisible(false);
+      reset();
     });
     const socket = io();
     socket.emit('update:client', true);
@@ -48,58 +39,44 @@ class CastVote extends Component {
   }
 
 
-  handleCancel = e => {
-    this.setState({
-      visible: false
-    })
+  const handleCancel = e => {
+    setVisible(false);
   }
 
-  onChange = e => {
+  const onChange = e => {
     console.log('radio checked', e.target.value)
-    this.setState({
-      value: e.target.value
-    })
+    setValue(e.target.value);
   }
-  render() {
-    return (
-      <Context.Consumer>
-        {(context) => {
-          return (
-            <div>
-              <Button icon="pie-chart" onClick={this.showModal} />
-              <Modal
-                title="Edit Poll"
-                destroyOnClose={true}
-                confirmLoading={this.state.isLoading}
-                visible={this.state.visible}
-                onOk={() => this.handleOk(context)}
-                onCancel={this.handleCancel}>
-                <h2>Vote for "{this.props.poll.name}"</h2>
+  return (
+    <div>
+      <Button icon="pie-chart" onClick={showModal} />
+      <Modal
+        title="Cast Vote"
+        confirmLoading={isLoading}
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}>
+        <h2>Vote for "{props.poll.name}"</h2>
 
-                <RadioGroup onChange={this.onChange} value={this.state.value}>
-                  {this.props.poll.votes.map(item => {
-                    return (
-                      <Radio style={radioStyle} key={item._id} value={item._id}>
-                        {item.name}
-                      </Radio>
-                    )
-                  })}
-                </RadioGroup>
-              </Modal>
-            </div>
-          )
-        }}
-      </Context.Consumer>
-    )
-  }
+        <RadioGroup onChange={onChange} value={value}>
+          {props.poll.votes.map(item => {
+            return (
+              <Radio style={radioStyle} key={item._id} value={item._id}>
+                {item.name}
+              </Radio>
+            )
+          })}
+        </RadioGroup>
+      </Modal>
+    </div>
+  )
 }
 
 CastVote.propTypes = {
   poll: PropTypes.shape({
     _id: PropTypes.string,
-    votes: PropTypes.Array,
+    votes: PropTypes.array,
     name: PropTypes.string
-  }).isRequired,
-  updatePoll: PropTypes.func
+  }).isRequired
 }
 export default CastVote
