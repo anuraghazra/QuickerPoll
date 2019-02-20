@@ -7,11 +7,25 @@ import CreatePoll from './components/CreatePoll/CreatePoll'
 import About from './components/About/About';
 import Provider from './components/Provider';
 
+import { message } from 'antd';
 
 import './styles/App.css'
 import 'antd/dist/antd.css';
 
 class App extends Component {
+  internetConnection = () => {
+    if (!navigator.onLine) {
+      message.error('Internet Connection Lost', 3);
+    }
+  }
+
+  componentDidMount() {
+    this.internetConnection();
+    window.addEventListener('offline', this.internetConnection);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('offline', this.internetConnection);
+  }
   render() {
     return (
       <BrowserRouter className="App">

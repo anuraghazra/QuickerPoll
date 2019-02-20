@@ -44,17 +44,20 @@ function CastVote(props) {
   }
 
   const onChange = e => {
-    console.log('radio checked', e.target.value)
     setValue(e.target.value);
   }
   return (
     <div>
       <Button icon="pie-chart" onClick={showModal} />
       <Modal
+        centered
         title="Cast Vote"
         confirmLoading={isLoading}
         visible={visible}
         onOk={handleOk}
+        okButtonProps={{
+          disabled: (value === null) ? true : false
+        }}
         onCancel={handleCancel}>
         <h2>Vote for "{props.poll.name}"</h2>
 

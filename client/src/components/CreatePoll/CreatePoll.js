@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import io from 'socket.io-client';
 
-import { Button, Row, Col } from 'antd';
+import { Button, Row, Col, message } from 'antd';
 
 import Chart from '../Chart';
 import PollTitle from '../PollTitle';
@@ -52,11 +52,13 @@ class CreatePoll extends Component {
           })
           const socket = io();
           socket.emit('update:client', true);
+          message.success(`${this.state.name} successfully created`, 3);
         });
       })
       .catch((error) => {
-        console.log(error)
-        this.setState({ isError: true })
+        console.log(error);
+        this.setState({ isError: true });
+        message.error(`Something went wrong creating new poll!`, 3);
       });
   }
 

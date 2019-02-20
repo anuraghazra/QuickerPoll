@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import { Modal, Button } from 'antd'
+import { Modal, Button, message } from 'antd'
 import axios from 'axios'
 import io from 'socket.io-client';
 
@@ -55,6 +55,7 @@ class EditPoll extends Component {
         context.state.getPolls(() => {
           const pollArray = this.context.state.polls.polls;
           const poll = pollArray.find(e => e._id === this.state.poll._id);
+          message.success('Poll has been updated!', 3);
           this.setState(() => {
             return { poll: poll }
           }, () => {

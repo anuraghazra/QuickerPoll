@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Context from './Context';
 import axios from 'axios';
 import io from 'socket.io-client';
+import { message } from 'antd';
 
 class Provider extends Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class Provider extends Component {
       .then(res => {
         callback();
         this.state.getPolls();
+        message.success('Thanks for voting!', 3)
         console.log('Updated Votes', res.data);
       })
       .catch(err => {
@@ -55,6 +57,7 @@ class Provider extends Component {
     axios.delete(`/api/polls/${_id}`, { data: { poll_id: _id } })
       .then(() => {
         this.state.getPolls();
+        message.success('Poll has been deleted!', 3)        
         const socket = io();
         socket.emit('update:client', true);
       })
