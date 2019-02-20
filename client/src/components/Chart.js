@@ -1,5 +1,6 @@
 import React from "react";
 import { Pie } from 'react-chartjs-2';
+import PropTypes from 'prop-types';
 
 const Chart = ({ votes, name }) => {
   const parseChartdata = () => {
@@ -34,4 +35,16 @@ const Chart = ({ votes, name }) => {
   )
 }
 
+Chart.propTypes = {
+  votes: PropTypes.arrayOf(
+    PropTypes.shape({
+      color: PropTypes.string,
+      name: PropTypes.string,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      __id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    })
+  ).isRequired,
+  name: PropTypes.string.isRequired
+}
 export default Chart;

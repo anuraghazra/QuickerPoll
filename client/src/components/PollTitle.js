@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Input } from 'antd';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const PollTitleWrapper = styled.div`
   display: flex;
@@ -34,9 +35,15 @@ function PollTitle(props) {
   const [willRename, setRename] = useState(false);
   const [name, setName] = useState(props.name);
 
+  useEffect(() => {
+    if (!willRename) {
+      setName(props.name);
+    }
+  });
+
   const toggleRename = () => { setRename(!willRename) }
 
-  const changeTitle = (e) => {
+  const _changeTitle = (e) => {
     setName(e.target.value);
   }
 
@@ -55,11 +62,12 @@ function PollTitle(props) {
               size="large"
               autoFocus={true}
               className="title__input"
-              onChange={changeTitle}
+              onChange={_changeTitle}
               onBlurCapture={handleTitleChange}
               value={name}
             />
-            : <p className="title__input">{name}</p>
+            :
+            <p className="title__input">{name}</p>
         )}
       </div>
       <div className="pen__div">
@@ -68,4 +76,10 @@ function PollTitle(props) {
     </PollTitleWrapper>
   )
 }
+
+PollTitle.propTypes = {
+  name: PropTypes.string.isRequired,
+  changeTitle: PropTypes.func.isRequired
+}
+
 export default PollTitle;

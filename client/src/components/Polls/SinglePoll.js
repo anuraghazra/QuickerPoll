@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Card,
@@ -26,7 +27,7 @@ function SinglePoll(props) {
     setDeleting(true);
     context.state.handleDeletePoll(poll._id);
   }
-  
+
 
   // Poll Actions (vote/edit/delete)
   const ActionVote = (
@@ -71,13 +72,21 @@ function SinglePoll(props) {
   )
 }
 
-// SinglePoll.propTypes = {
-//   poll: PropTypes.shape({
-//     _id: PropTypes.string,
-//     votes: PropTypes.Array,
-//     name: PropTypes.string
-//   }),
-//   handleDeletePoll: PropTypes.func
-// }
+SinglePoll.propTypes = {
+  poll: PropTypes.shape({
+    _id: PropTypes.string,
+    votes: PropTypes.arrayOf(
+      PropTypes.shape({
+        color: PropTypes.string,
+        name: PropTypes.string,
+        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        __id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      })
+    ),
+    name: PropTypes.string
+  }).isRequired,
+  handleDeletePoll: PropTypes.func
+}
 
 export default SinglePoll;

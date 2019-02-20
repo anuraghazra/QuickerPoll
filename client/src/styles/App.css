@@ -5,7 +5,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  font-weight: 100;
+  /* font-weight: 100; */
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -19,4 +19,19 @@ html, body {
 
 .App {
   margin: auto;
+}
+
+.ant-popover-inner-content {
+  padding: 0 !important;
+}
+
+
+.colorPicker {
+  z-index: 1;
+  box-shadow: none !important;
+}
+
+.colorPicker-wrapper {
+  cursor: pointer;
+  margin: 0;
 }

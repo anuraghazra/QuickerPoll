@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
-import { Input, Button, InputNumber } from 'antd';
+import { ColorPopOver } from '../VoteGroup/ColorPicker';
+import { Button, Input, InputNumber } from 'antd';
+import PropTypes from 'prop-types';
+
+
 import styled from 'styled-components';
-
-
 const AddPollWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 50px;
+  flex-shrink: initial;
   
   .ui__add {
     display: flex;
+    align-items: center;
+    flex-shrink: initial;
+    
     > * {
       margin: 5px;
       flex: 1;
@@ -34,8 +40,8 @@ class AddVote extends Component {
   handleValue = (value) => {
     this.setState({ value: value })
   }
-  handleColor = (e) => {
-    this.setState({ color: e.target.value })
+  handleColor = (color) => {
+    this.setState({ color: color })
   }
   handleSubmit = (e) => {
     this.props.addPollOption(this.state);
@@ -60,23 +66,23 @@ class AddVote extends Component {
             onChange={this.handleValue}
             value={this.state.value}
             defaultValue={this.state.value} />
-          <Input
-            size="large"
-            type="color"
-            onChange={this.handleColor}
-            defaultValue={this.state.color}
-            value={this.state.color}
-            placeholder="poll option" />
+          <ColorPopOver style={{ height: "38px" }} update={this.handleColor} color={this.state.color} />
         </div>
+
         <Button
+          style={{ minWidth: '40px' }}
           type="primary"
           size="large"
           shape="circle"
           icon="plus"
-          onClick={this.handleSubmit} />
+          onClick={this.handleSubmit}
+        />
       </AddPollWrapper>
     )
   }
 }
 
+AddVote.propTypes = {
+  addPollOption: PropTypes.func.isRequired
+}
 export default AddVote;

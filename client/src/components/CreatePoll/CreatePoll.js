@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import io from 'socket.io-client';
@@ -8,7 +9,7 @@ import { Button, Row, Col } from 'antd';
 import Chart from '../Chart';
 import PollTitle from '../PollTitle';
 import AddVote from './AddVote';
-import VoteGroup from './VoteGroup';
+import VoteGroup from '../VoteGroup/VoteGroup';
 
 import Context from '../Context';
 

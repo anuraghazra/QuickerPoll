@@ -74,9 +74,17 @@ function CastVote(props) {
 
 CastVote.propTypes = {
   poll: PropTypes.shape({
-    _id: PropTypes.string,
-    votes: PropTypes.array,
-    name: PropTypes.string
+    _id: PropTypes.string.isRequired,
+    votes: PropTypes.arrayOf(
+      PropTypes.shape({
+        color: PropTypes.string,
+        name: PropTypes.string,
+        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        __id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      })
+    ).isRequired,
+    name: PropTypes.string.isRequired
   }).isRequired
 }
 export default CastVote

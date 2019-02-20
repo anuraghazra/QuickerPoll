@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types';
 import { Modal, Button } from 'antd'
 import axios from 'axios'
 import io from 'socket.io-client';
 
 import PollTitle from './PollTitle'
-import VoteGroup from './CreatePoll/VoteGroup'
+import VoteGroup from './VoteGroup/VoteGroup'
 import Context from './Context';
 
 /**
@@ -82,6 +83,10 @@ class EditPoll extends Component {
     })
   }
 
+  handleRerender = () => {
+    this.forceUpdate();
+  }
+
   render() {
     return (
       <Context.Consumer>
@@ -94,7 +99,10 @@ class EditPoll extends Component {
                 visible={this.state.visible}
                 onOk={() => this.handleOk(context)}
                 onCancel={this.handleCancel}>
-                <PollTitle changeTitle={this.changeTitle} name={this.state.poll.name} />
+                <PollTitle
+                  changeTitle={this.changeTitle}
+                  name={this.state.poll.name}
+                />
 
                 <VoteGroup
                   isUpdating={true}
@@ -111,5 +119,21 @@ class EditPoll extends Component {
 }
 
 EditPoll.contextType = Context;
+
+EditPoll.propTypes = {
+  poll: PropTypes.shape({
+    _id: PropTypes.string,
+    votes: PropTypes.arrayOf(
+      PropTypes.shape({
+        color: PropTypes.string,
+        name: PropTypes.string,
+        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        __id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      })
+    ),
+    name: PropTypes.string
+  }).isRequired,
+}
 
 export default EditPoll;
