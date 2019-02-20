@@ -36,11 +36,11 @@ function About() {
     <AboutWrapper>
       <Row type="flex" justify="center">
         <Col sm={24} md={16}>
-          <Divider orientation="left" style={{ fontSize: "24px" }}> About QuickPoll </Divider>
+          <Divider orientation="left" style={{ fontSize: "24px" }}> About QuickerPoll </Divider>
 
           <p>
-            QuickPoll is a crowd-sourced real-time polling app created with React and Nodejs.
-            QuickPoll lets you create, edit, update, delete public polls
+            QuickerPoll is a crowd-sourced real-time polling app created with React and Nodejs.
+            QuickerPoll lets you create, edit, update, delete public polls
             and vote on them publicly.
             This project is just an example of using react, nodejs and restfull apis all together
             <br />

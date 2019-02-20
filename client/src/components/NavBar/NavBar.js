@@ -53,7 +53,7 @@ const NavBar = () => {
   return (
     <Row type="flex" justify="end" align="middle" className="nav">
       <Col span={18} itemType="flex">
-        <h2 className="nav__title">Quick Poll</h2>
+        <h2 className="nav__title">Quicker Poll</h2>
       </Col>
       <Col span={6}>
         {
