@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./server/server.js",
     "watch-server": "nodemon ./server/server.js",
-    "dev": "concurrently \"npm run watch-server\" \"cd client && npm start\""
+    "dev": "concurrently \"npm run watch-server\" \"cd client && npm start\"",
+    "prod": "concurrently \"npm run watch-server\" \"cd client && npm serve\""
   },
   "author": "hazru.anurag@gmail.com",
   "license": "MIT",
