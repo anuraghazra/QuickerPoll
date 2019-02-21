@@ -52,10 +52,10 @@ const NavBar = () => {
   };
   return (
     <Row type="flex" justify="end" align="middle" className="nav">
-      <Col span={18} itemType="flex">
+      <Col xs={18} lg={16} itemType="flex">
         <h2 className="nav__title">Quicker Poll</h2>
       </Col>
-      <Col span={6}>
+      <Col xs={6} lg={8}>
         {
           (screen < 768) ?
             <Popover
