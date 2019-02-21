@@ -52,6 +52,10 @@ class AddVote extends Component {
     })
   }
 
+  validateInputs = () => {
+    return !(this.state.name && this.state.value !== undefined);
+  }
+
   render() {
     return (
       <AddPollWrapper>
@@ -70,6 +74,7 @@ class AddVote extends Component {
         </div>
 
         <Button
+          disabled={this.validateInputs()}
           style={{ minWidth: '40px' }}
           type="primary"
           size="large"
