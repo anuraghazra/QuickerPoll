@@ -9,6 +9,7 @@ const Provider = (props) => {
   const [polls, setPolls] = useState([]);
 
   useEffect(() => {
+    setIsLoading(true);
     getPolls();
     const socket = io();
     socket.on("update:server", () => {
