@@ -1,10 +1,9 @@
 
 const mongoose = require('mongoose');
-const URI = require('../config/index');
 
 module.exports = (function () {
-  console.log(URI)
-  mongoose.connect(URI, { useNewUrlParser: true })
+  const MONGO_URI = process.env.MONGODB_URI;
+  mongoose.connect(MONGO_URI, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to mlab')
     })

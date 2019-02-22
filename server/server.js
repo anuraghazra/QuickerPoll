@@ -2,6 +2,8 @@ const http = require('http');
 const app = require('./app');
 const socketIO = require('socket.io');
 
+require('dotenv').config();
+
 const PORT = process.env.PORT || 5000;
 
 // connect to db
