@@ -15,7 +15,7 @@ const Polls = () => {
   return (
     <Context.Consumer>
       {(context) => {
-        const data = context.state.polls;
+        const data = context.polls;
         let polls = <Empty />;
         if (data.count > 0) {
           polls = data.polls.map(poll => {
@@ -29,7 +29,7 @@ const Polls = () => {
 
         return (
           <section className="polls">
-            <Spin spinning={context.state.isLoading} tip="Fetching Polls...">
+            <Spin spinning={context.isLoading} tip="Fetching Polls...">
               <Row type="flex" justify="center" align="middle" className="polls">
                 {polls}
               </Row>

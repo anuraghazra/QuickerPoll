@@ -52,8 +52,8 @@ class EditPoll extends Component {
     axios.patch(`/api/polls/${this.state._mongo_id}`, updatedValues)
       .then(res => {
         console.log(res.data, 'Updated');
-        context.state.getPolls(() => {
-          const pollArray = this.context.state.polls.polls;
+        context.getPolls(() => {
+          const pollArray = this.context.polls.polls;
           const poll = pollArray.find(e => e._id === this.state.poll._id);
           message.success('Poll has been updated!', 3);
           this.setState(() => {

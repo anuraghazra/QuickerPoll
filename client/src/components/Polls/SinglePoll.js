@@ -25,7 +25,7 @@ function SinglePoll(props) {
 
   const deletePoll = (context) => {
     setDeleting(true);
-    context.state.handleDeletePoll(poll._id);
+    context.handleDeletePoll(poll._id);
   }
 
 

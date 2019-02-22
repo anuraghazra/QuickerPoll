@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import { Redirect } from 'react-router-dom'
-import axios from 'axios';
 import io from 'socket.io-client';
 
 import { Button, Row, Col, message } from 'antd';
@@ -44,22 +43,14 @@ class CreatePoll extends Component {
       name: this.state.name,
       votes: this.state.votes,
     }
-    axios.post('/api/polls', data)
-      .then((res) => {
-        context.state.getPolls(() => {
-          this.setState({
-            willRedirect: true
-          })
-          const socket = io();
-          socket.emit('update:client', true);
-          message.success(`${this.state.name} successfully created`, 3);
-        });
+    context.createPoll(data, () => {
+      this.setState({
+        willRedirect: true
       })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ isError: true });
-        message.error(`Something went wrong creating new poll!`, 3);
-      });
+      const socket = io();
+      socket.emit('update:client', true);
+      message.success(`${this.state.name} successfully created`, 3);
+    })
   }
 
 

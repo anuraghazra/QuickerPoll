@@ -29,7 +29,7 @@ function CastVote(props) {
 
   const handleOk = () => {
     setLoading(true);
-    context.state.addVote(props.poll._id, value, () => {
+    context.addVote(props.poll._id, value, () => {
       setVisible(false);
       reset();
     });

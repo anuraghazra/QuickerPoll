@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { ColorPopOver } from '../VoteGroup/ColorPicker';
 import { Button, Input, InputNumber } from 'antd';
 import PropTypes from 'prop-types';
@@ -27,64 +27,55 @@ function randomHex(e) {
   return '#' + Math.floor(Math.random() * 16777215).toString(16)
 }
 
-class AddVote extends Component {
-  state = {
-    name: '',
-    value: 0,
-    color: randomHex()
+const AddVote = (props) => {
+  const [name, setName] = useState('');
+  const [value, setValue] = useState(0);
+  const [color, setColor] = useState(randomHex());
+
+  const handleName = e => setName(e.target.value);
+  const handleValue = value => setValue(value);
+  const handleColor = color => setColor(color);
+  const handleSubmit = (e) => {
+    props.addPollOption({
+      name, value, color
+    });
+    setName('');
+    setValue(0);
+    setColor(randomHex());
   }
 
-  handleName = (e) => {
-    this.setState({ name: e.target.value })
-  }
-  handleValue = (value) => {
-    this.setState({ value: value })
-  }
-  handleColor = (color) => {
-    this.setState({ color: color })
-  }
-  handleSubmit = (e) => {
-    this.props.addPollOption(this.state);
-    this.setState({
-      name: '',
-      value: 0,
-      color: randomHex()
-    })
+  const validateInputs = () => {
+    return !(name && value !== undefined);
   }
 
-  validateInputs = () => {
-    return !(this.state.name && this.state.value !== undefined);
-  }
-
-  render() {
-    return (
-      <AddPollWrapper>
-        <div className="ui__add">
-          <Input
-            size="large"
-            onChange={this.handleName}
-            value={this.state.name}
-            placeholder="poll option" />
-          <InputNumber
-            size="large"
-            onChange={this.handleValue}
-            value={this.state.value}
-            defaultValue={this.state.value} />
-          <ColorPopOver style={{ height: "38px" }} update={this.handleColor} color={this.state.color} />
-        </div>
-
-        <Button
-          disabled={this.validateInputs()}
-          style={{ minWidth: '40px' }}
-          type="primary"
+  return (
+    <AddPollWrapper>
+      <div className="ui__add">
+        <Input
           size="large"
-          shape="circle"
-          icon="plus"
-          onClick={this.handleSubmit}
-        />
-      </AddPollWrapper>
-    )
-  }
+          onChange={handleName}
+          value={name}
+          placeholder="poll option" />
+        <InputNumber
+          size="large"
+          max={100}
+          onChange={handleValue}
+          value={value}
+          defaultValue={value} />
+        <ColorPopOver style={{ height: "38px" }} update={handleColor} color={color} />
+      </div>
+
+      <Button
+        disabled={validateInputs()}
+        style={{ minWidth: '40px' }}
+        type="primary"
+        size="large"
+        shape="circle"
+        icon="plus"
+        onClick={handleSubmit}
+      />
+    </AddPollWrapper>
+  )
 }
 
 AddVote.propTypes = {
