@@ -120,6 +120,7 @@ PollRoute.patch('/cast/:poll_id', (req, res) => {
     });
 });
 
+// delete Polls
 PollRoute.delete('/:poll_id', (req, res) => {
   const poll_id = req.params.poll_id;
   PollModel.findByIdAndRemove(poll_id)
