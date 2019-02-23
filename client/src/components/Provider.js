@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Context from './Context';
 import axios from 'axios';
-import io from 'socket.io-client';
 import { message } from 'antd';
+
+import socket from './io';
 
 const Provider = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,7 +12,6 @@ const Provider = (props) => {
   useEffect(() => {
     setIsLoading(true);
     getPolls();
-    const socket = io();
     socket.on("update:server", () => {
       getPolls();
     });
@@ -25,7 +25,10 @@ const Provider = (props) => {
         setPolls(res.data);
         callback && callback();
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+        message.error('Something went wrong when fetching the polls', 3)      
+      });
   }
 
   const addVote = (id, value, callback) => {
@@ -35,21 +38,20 @@ const Provider = (props) => {
         callback();
         getPolls();
         message.success('Thanks for voting!', 3)
-        console.log('Updated Votes', res.data);
       })
       .catch(err => {
         console.log('ERROR Updating Poll', err);
+        message.error('Something went wrong when voting', 3);
       });
   }
 
-  const createPoll = (data, callback) => {
+  const createPoll = (data, callback, err) => {
     axios.post('/api/polls', data)
-      .then(() => {
+      .then(data => {
         getPolls(callback);
       })
       .catch((error) => {
-        console.log(error);
-        message.error(`Something went wrong creating new poll!`, 3);
+        err && err(error);
       });
   }
 
@@ -59,11 +61,11 @@ const Provider = (props) => {
       .then(() => {
         getPolls();
         message.success('Poll has been deleted!', 3)
-        const socket = io();
         socket.emit('update:client', true);
       })
       .catch(err => {
         console.log(err);
+        message.error('Something went wrong when deleting the poll', 3)
       });
   }
 

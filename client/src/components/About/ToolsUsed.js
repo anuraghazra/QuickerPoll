@@ -37,9 +37,10 @@ const data = [
 function ToolsUsed() {
   return (
     <section className="tools-used">
-      {data.map(item => {
+      {data.map((item, i) => {
         return (
           <Card
+            key={i}
             title={item.title}
             extra={<a rel="noopener noreferrer" target="_blank" href={item.url} ><Icon type="login" /></a>}
           >

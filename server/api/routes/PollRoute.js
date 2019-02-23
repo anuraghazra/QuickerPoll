@@ -1,7 +1,6 @@
 const express = require('express');
 const PollRoute = express.Router();
 const PollModel = require('../../models/PollModel');
-const app = express();
 
 // GET all polls
 PollRoute.get('/', (req, res) => {
@@ -25,7 +24,7 @@ PollRoute.get('/', (req, res) => {
     })
     .catch(err => {
       console.log('Something went wrong when fetching the data ', err);
-      res.status(code).json({ error: err });
+      res.status(404).json({ error: err });
     });
 });
 
@@ -53,7 +52,6 @@ PollRoute.get('/:poll_id', (req, res) => {
 
 // POST create new poll
 PollRoute.post('/', (req, res) => {
-  console.log(req.body);
   PollModel.create(req.body)
     .then(data => {
       const response = {
@@ -67,8 +65,8 @@ PollRoute.post('/', (req, res) => {
       res.send(response);
     })
     .catch(err => {
-      console.log('Something went wrong creating new poll', err);
-      res.send(err);
+      console.error(err.message)
+      res.status(500).json({ error: err.message });
     });
 });
 
@@ -93,7 +91,7 @@ PollRoute.patch('/:poll_id', (req, res) => {
     })
     .catch(err => {
       console.log('Something went wrong when casting votes');
-      res.status(501).json({ erro: err });
+      res.status(501).json({ error: err.message });
     });
 });
 

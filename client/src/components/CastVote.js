@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Modal, Button, Radio } from 'antd';
 import PropTypes from 'prop-types';
 import Context from './Context';
-import io from 'socket.io-client';
+import socket from './io';
 
 const RadioGroup = Radio.Group
 
@@ -33,7 +33,6 @@ function CastVote(props) {
       setVisible(false);
       reset();
     });
-    const socket = io();
     socket.emit('update:client', true);
     // this.props.updatePoll(result.data.votes);
   }

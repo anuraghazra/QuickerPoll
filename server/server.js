@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 5000;
 // connect to db
 require('./helpers/dbConnect');
 
-
 const server = http.createServer(app);
 
 const io = socketIO(server);
@@ -21,4 +20,6 @@ io.on("connection", client => {
 });
 
 
-server.listen(PORT);
+server.listen(PORT, () => {
+  console.log('Server Listining on port ' + PORT);
+});

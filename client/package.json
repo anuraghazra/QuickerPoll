@@ -4,7 +4,6 @@
   "proxy": "http://localhost:5000",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^3.9.2",
     "antd": "^3.13.2",
     "axios": "^0.18.0",
     "chart.js": "^2.7.3",

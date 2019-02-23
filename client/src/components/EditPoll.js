@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { Modal, Button, message } from 'antd'
 import axios from 'axios'
-import io from 'socket.io-client';
+import socket from './io';
 
 import PollTitle from './PollTitle'
 import VoteGroup from './VoteGroup/VoteGroup'
@@ -59,7 +59,6 @@ class EditPoll extends Component {
           this.setState(() => {
             return { poll: poll }
           }, () => {
-            const socket = io();
             socket.emit('update:client', true);
           })
         });

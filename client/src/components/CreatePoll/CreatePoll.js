@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
 import { Redirect } from 'react-router-dom';
-import io from 'socket.io-client';
-
+import socket from '../io';
 import { Button, Row, Col, message } from 'antd';
 
 import Chart from '../Chart';
@@ -47,9 +46,14 @@ class CreatePoll extends Component {
       this.setState({
         willRedirect: true
       })
-      const socket = io();
       socket.emit('update:client', true);
       message.success(`${this.state.name} successfully created`, 3);
+    }, (err) => {
+      this.setState({
+        willRedirect: false,
+        isLoading: false
+      })
+      message.error(`Something went wrong - ` + err.message, 3);
     })
   }
 
@@ -112,7 +116,12 @@ class CreatePoll extends Component {
                 </Col>
               </Row>
 
-              <Button loading={this.state.isLoading} onClick={() => this.submitPoll(context)}>Create Poll</Button>
+              <Button
+                disabled={!(this.state.votes.length > 1)}
+                loading={this.state.isLoading}
+                onClick={() => this.submitPoll(context)}>
+                Create Poll
+              </Button>
             </CreatePollWrapper>
           )
         }}
