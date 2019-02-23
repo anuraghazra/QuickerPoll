@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import { Modal, Button, message } from 'antd'
-import axios from 'axios'
+import { Modal, Button, message } from 'antd';
 import socket from './io';
 
-import PollTitle from './PollTitle'
-import VoteGroup from './VoteGroup/VoteGroup'
+import PollTitle from './PollTitle';
+import VoteGroup from './VoteGroup/VoteGroup';
 import Context from './Context';
 
 /**
