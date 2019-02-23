@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom';
 import io from 'socket.io-client';
 
 import { Button, Row, Col, message } from 'antd';

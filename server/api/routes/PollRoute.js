@@ -1,6 +1,7 @@
 const express = require('express');
 const PollRoute = express.Router();
 const PollModel = require('../../models/PollModel');
+const app = express();
 
 // GET all polls
 PollRoute.get('/', (req, res) => {
@@ -48,6 +49,7 @@ PollRoute.get('/:poll_id', (req, res) => {
       res.status(404).json({ error: err });
     });
 });
+
 
 // POST create new poll
 PollRoute.post('/', (req, res) => {
@@ -138,5 +140,6 @@ PollRoute.delete('/:poll_id', (req, res) => {
       res.status(501).json({ erro: err });
     });
 });
+
 
 module.exports = PollRoute;

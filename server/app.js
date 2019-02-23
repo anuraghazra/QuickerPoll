@@ -6,13 +6,6 @@ const PollRoute = require('./api/routes/PollRoute');
 const app = express();
 const path = require('path');
 
-// ADD THIS LINE
-app.use(express.static('client/build'));
-// If no API routes are hit, send the React app
-const router = express.Router();
-router.use(function(req, res) {
-	res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
 
 // Serve static files from the React app
 // app.use(express.static(path.join(__dirname, '../client/build')));
@@ -48,6 +41,7 @@ function getClientIP(req, res, next) {
 
 }
 
+
 // error handling
 app.use((req, res, next) => {
   const error = new Error('404 not found');
@@ -62,5 +56,21 @@ app.use((error, req, res, next) => {
   })
 });
 
+
+// Server Side Routing
+// If no API routes are hit, send the React app
+app.use(express.static('client/build'));
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+});
+
+// const router = express.Router();
+// app.get('/*', function(req, res) {
+// 	res.sendFile(path.join(__dirname, '../client/build/index.html'));
+// });
 
 module.exports = app;
