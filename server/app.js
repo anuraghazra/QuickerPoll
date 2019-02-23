@@ -42,20 +42,6 @@ function getClientIP(req, res, next) {
 }
 
 
-// error handling
-app.use((req, res, next) => {
-  const error = new Error('404 not found');
-  error.status = 404;
-  next(error);
-});
-
-app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.send({
-    error: error.message
-  })
-});
-
 
 // Server Side Routing
 // If no API routes are hit, send the React app
@@ -72,5 +58,20 @@ app.get('/*', function(req, res) {
 // app.get('/*', function(req, res) {
 // 	res.sendFile(path.join(__dirname, '../client/build/index.html'));
 // });
+
+// error handling
+app.use((req, res, next) => {
+  const error = new Error('404 not found');
+  error.status = 404;
+  next(error);
+});
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  res.send({
+    error: error.message
+  })
+});
+
 
 module.exports = app;
