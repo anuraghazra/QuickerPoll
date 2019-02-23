@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Modal, Button, Radio } from 'antd';
+import { Modal, Button, Radio, message } from 'antd';
 import PropTypes from 'prop-types';
 import Context from './Context';
 import socket from './io';
@@ -31,9 +31,10 @@ function CastVote(props) {
     setLoading(true);
     context.addVote(props.poll._id, value, () => {
       setVisible(false);
+      message.success('Thanks for voting!', 3)
+      socket.emit('update:client', true);
       reset();
     });
-    socket.emit('update:client', true);
     // this.props.updatePoll(result.data.votes);
   }
 

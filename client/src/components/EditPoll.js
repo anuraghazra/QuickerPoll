@@ -19,8 +19,9 @@ class EditPoll extends Component {
     this.state = {
       visible: false,
       willRename: false,
+      isLoading: false,
       _mongo_id: this.props.poll._id, // eslint-disable-line
-      poll: this.props.poll
+      poll: this.props.poll,
     }
   }
 
@@ -42,30 +43,29 @@ class EditPoll extends Component {
   }
   handleOk = context => {
     this.setState({
-      visible: false
+      isLoading: true
     })
     const updatedValues = [
       { propName: 'name', value: this.state.poll.name },
       { propName: 'votes', value: this.state.poll.votes }
     ]
 
-    axios.patch(`/api/polls/${this.state._mongo_id}`, updatedValues)
-      .then(res => {
-        console.log(res.data, 'Updated');
-        context.getPolls(() => {
-          const pollArray = this.context.polls.polls;
-          const poll = pollArray.find(e => e._id === this.state.poll._id);
-          message.success('Poll has been updated!', 3);
-          this.setState(() => {
-            return { poll: poll }
-          }, () => {
-            socket.emit('update:client', true);
-          })
-        });
+    context.editPoll(this.state._mongo_id, updatedValues, () => {
+      const pollArray = this.context.polls.polls;
+      const poll = pollArray.find(e => e._id === this.state.poll._id);
+      this.setState({
+        visible: false,
+        isLoading: false
       })
-      .catch(err => {
-        console.log('ERROR Updating Poll', err)
-      })
+      socket.emit('update:client', true);
+      message.success('Poll has been updated!', 3);
+      this.setState(() => {
+        return { poll: poll }
+      });
+    }, (err) => {
+      console.error(err);
+      message.success('Something went wrong editing the poll!' + err.message, 3);
+    })
   }
 
   handleTitleRename = () => {
@@ -95,6 +95,7 @@ class EditPoll extends Component {
             <div>
               <Button icon="edit" onClick={this.showModal} />
               <Modal
+                confirmLoading={this.state.isLoading}
                 title="Edit Poll"
                 visible={this.state.visible}
                 onOk={() => this.handleOk(context)}

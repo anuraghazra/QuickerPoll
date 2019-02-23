@@ -27,17 +27,15 @@ const Provider = (props) => {
       })
       .catch(err => {
         console.log(err)
-        message.error('Something went wrong when fetching the polls', 3)      
+        message.error('Something went wrong when fetching the polls', 3)
       });
   }
 
   const addVote = (id, value, callback) => {
     // eslint-disable-next-line 
     axios.patch(`/api/polls/cast/${id}`, { vote_id: value })
-      .then(res => {
-        callback();
-        getPolls();
-        message.success('Thanks for voting!', 3)
+      .then(() => {
+        getPolls(callback);
       })
       .catch(err => {
         console.log('ERROR Updating Poll', err);
@@ -45,14 +43,25 @@ const Provider = (props) => {
       });
   }
 
-  const createPoll = (data, callback, err) => {
-    axios.post('/api/polls', data)
-      .then(data => {
+  const createPoll = (payload, callback, err) => {
+    axios.post('/api/polls', payload)
+      .then(() => {
         getPolls(callback);
       })
       .catch((error) => {
         err && err(error);
       });
+  }
+
+  const editPoll = (id, payload, callback, err) => {
+    axios.patch(`/api/polls/${id}`, payload)
+      .then(() => {
+        getPolls(callback);
+      })
+      .catch(error => {
+        err && err(error);
+        console.log('ERROR Updating Poll', err);
+      })
   }
 
   const handleDeletePoll = (_id) => {
@@ -77,7 +86,8 @@ const Provider = (props) => {
         getPolls: getPolls,
         handleDeletePoll: handleDeletePoll,
         addVote: addVote,
-        createPoll: createPoll
+        createPoll: createPoll,
+        editPoll: editPoll
       }}>
       {props.children}
     </Context.Provider>
