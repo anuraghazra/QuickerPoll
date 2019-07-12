@@ -3,8 +3,8 @@ import { ColorPopOver } from '../VoteGroup/ColorPicker';
 import { Button, Input, InputNumber } from 'antd';
 import PropTypes from 'prop-types';
 
-
 import styled from 'styled-components';
+
 const AddPollWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -21,31 +21,27 @@ const AddPollWrapper = styled.div`
       flex: 1;
     }
   }
-  `;
+`;
 
 function randomHex(e) {
   return '#' + Math.floor(Math.random() * 16777215).toString(16)
 }
 
 const AddVote = (props) => {
-  const [name, setName] = useState('');
-  const [value, setValue] = useState(0);
-  const [color, setColor] = useState(randomHex());
+  const [vote, setVote] = useState({ name: '', value: 0, color: randomHex() })
 
-  const handleName = e => setName(e.target.value);
-  const handleValue = value => setValue(value);
-  const handleColor = color => setColor(color);
+  const handleName = e => setVote({ ...vote, name: e.target.value });
+  const handleValue = value => setVote({ ...vote, value: value });
+  const handleColor = color => setVote({ ...vote, color: color });
   const handleSubmit = (e) => {
     props.addPollOption({
-      name, value, color
+      name: vote.name, value: vote.value, color: vote.color
     });
-    setName('');
-    setValue(0);
-    setColor(randomHex());
+    setVote({ name: '', value: 0, color: randomHex() });
   }
 
   const validateInputs = () => {
-    return !(name && value !== undefined);
+    return !(vote.name && vote.value !== undefined);
   }
 
   return (
@@ -54,15 +50,15 @@ const AddVote = (props) => {
         <Input
           size="large"
           onChange={handleName}
-          value={name}
+          value={vote.name}
           placeholder="poll option" />
         <InputNumber
           size="large"
           max={100}
           onChange={handleValue}
-          value={value}
-          defaultValue={value} />
-        <ColorPopOver style={{ height: "38px" }} update={handleColor} color={color} />
+          value={vote.value}
+          defaultValue={vote.value} />
+        <ColorPopOver style={{ height: "38px" }} update={handleColor} color={vote.color} />
       </div>
 
       <Button

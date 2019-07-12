@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const cors = require('./helpers/cors');
+const cors = require('cors');
 const PollRoute = require('./api/routes/PollRoute');
 const app = express();
 const path = require('path');
@@ -13,7 +13,7 @@ const path = require('path');
 // });
 
 // middlewares
-app.use(cors);
+app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -24,8 +24,8 @@ app.use('/api/polls', PollRoute);
 // Server Side Routing
 // If no API routes are hit, send the React app
 app.use(express.static('client/build'));
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'), function(err) {
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'), function (err) {
     if (err) {
       res.status(500).send(err)
     }

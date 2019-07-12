@@ -7,7 +7,6 @@ const Item = ({ item, update, deletable, handleDelete }) => {
   return (
     <>
       <p>{item.name}</p>
-
       <ColorPopOver update={update} color={item.color} id={item.__id} />
 
       <Input

@@ -32,5 +32,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "why-did-you-update": "^1.0.6"
+  }
 }

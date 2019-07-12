@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Row, Col, Spin, Empty } from 'antd';
 
 import SinglePoll from './SinglePoll';
@@ -12,32 +12,24 @@ import Context from '../Context';
  * @useIn {App}
  */
 const Polls = () => {
-  return (
-    <Context.Consumer>
-      {(context) => {
-        const data = context.polls;
-        let polls = <Empty />;
-        if (data.count > 0) {
-          polls = data.polls.map(poll => {
-            return (
-              <Col md={12} sm={24} lg={8} key={poll._id}>
-                <SinglePoll poll={poll} />
-              </Col>
-            )
-          });
-        }
+  const { polls: data, isLoading } = useContext(Context);
 
-        return (
-          <section className="polls">
-            <Spin spinning={context.isLoading} tip="Fetching Polls...">
-              <Row type="flex" justify="center" align="middle" className="polls">
-                {polls}
-              </Row>
-            </Spin>
-          </section>
-        )
-      }}
-    </Context.Consumer>
+  return (
+    <section className="polls">
+      <Spin spinning={isLoading} tip="Fetching Polls...">
+        <Row type="flex" justify="center" align="middle" className="polls">
+          {
+            data.polls ? data.polls.map(poll => {
+              return (
+                <Col md={12} sm={24} lg={8} key={poll._id}>
+                  <SinglePoll poll={poll} />
+                </Col>
+              )
+            }) : <Empty />
+          }
+        </Row>
+      </Spin>
+    </section>
   )
 }
 
