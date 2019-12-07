@@ -70,7 +70,6 @@ const Provider = (props) => {
       .then(() => {
         getPolls();
         message.success('Poll has been deleted!', 3)
-        socket.emit('update:client', true);
       })
       .catch(err => {
         console.log(err);

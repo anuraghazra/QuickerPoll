@@ -33,7 +33,7 @@ const AddVote = (props) => {
   const handleName = e => setVote({ ...vote, name: e.target.value });
   const handleValue = value => setVote({ ...vote, value: value });
   const handleColor = color => setVote({ ...vote, color: color });
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     props.addPollOption({
       name: vote.name, value: vote.value, color: vote.color
     });
