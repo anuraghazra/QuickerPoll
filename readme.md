@@ -2,7 +2,7 @@
 QuickerPoll is a crowd-sourced real-time polling app created with React and Nodejs. QuickerPoll lets you create edit, update, delete public polls and vote on them publicly. This project is just an example of using react, nodejs and restfull apis all together
 
 
-*NOTE : please do not create any violating contents here as is this database is publicly visible and i'm not responsibe for any violating content*
+*NOTE : please do not create any violating contents here as is this database is publicly visible and i'm not liable for any violating content*
 
 
 ## API Endpoints: 
