@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "antd": "^3.13.2",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "chart.js": "^2.7.3",
     "prop-types": "^15.7.2",
     "react": "^16.8.1",
